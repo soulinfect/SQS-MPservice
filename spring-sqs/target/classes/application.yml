@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/SQSservice
+    username: sqsuser
+    password: p18QnHDTrBDOavMd
+    driver-class-name: org.postgresql.Driver
+  cloud:
+    aws:
+      region:
+        static: us-east-1
+cloud:
+  aws:
+    s3:
+      bucket-name: my-bucket
+      region: us-east-1
+      endpoint: http://localstack:4566
+    region:
+      static: us-east-1
+    credentials:
+      access-key: test
+      secret-key: test
+    sqs:
+      endpoint: http://localstack:4566
+      enabled: true
+      region: us-east-1
+      auto-create-queue: true
+      queue-name: my-queue
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    debug: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8081
+logging:
+  level:
+    org.flywaydb: TRACE
+
+
+
+

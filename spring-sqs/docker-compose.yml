@@ -1,0 +1,71 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: PG-SQSservice
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sqsuser
+      POSTGRES_PASSWORD: p18QnHDTrBDOavMd
+      POSTGRES_DB: SQSservice
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sqsuser -d SQSservice"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    networks:
+      - project-network
+
+  localstack:
+    image: localstack/localstack:4.14.0
+    container_name: project-localstack
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - SERVICES=s3,sqs
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - HOSTNAME_EXTERNAL=localstack
+      - LOCALSTACK_HOST=localstack
+    volumes:
+      - localstack-data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - project-network
+
+  app:
+    build: .
+    container_name: app-SQSservice
+    depends_on:
+      postgres:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_CLOUD_AWS_SQS_ENDPOINT: http://localstack:4566
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/SQSservice
+      SPRING_DATASOURCE_USERNAME: sqsuser
+      SPRING_DATASOURCE_PASSWORD: p18QnHDTrBDOavMd
+      SPRING_FLYWAY_ENABLED: "true"
+    networks:
+      - project-network
+
+volumes:
+  postgres-data:
+    name: project-postgres-data
+  localstack-data:
+
+networks:
+  project-network:
+    name: project-network
