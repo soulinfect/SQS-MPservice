@@ -77,7 +77,7 @@ URL: `http://localhost:4566/000000000000/my-queue?Action=SendMessage`
 - `site `
 - `group`
 - `user`
-Действия (action):
+#### Действия (action):
 - `create` – создаёт новую запись (для site также загружает файл)
 - `update` – обновляет временную метку updated_at
 - `delete` – помечает запись как удалённую (soft delete)
