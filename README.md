@@ -32,9 +32,9 @@
 1. Клонируйте репозиторий:
    - `git clone <url-репозитория>`
    - `cd <директория-проекта>`
-  Запустите все контейнеры одной командой: docker compose up -d
-  Дождитесь старта всех сервисов (обычно не больше минуты). Приложение автоматически создаст тестовую очередь SQS my-queue и тестовый бакет S3 my-bucket внутри LocalStack, если они отсутствуют.
-  Проверьте логи приложения: `docker compose logs app -f`
+2. Запустите все контейнеры одной командой: docker compose up -d
+3. Дождитесь старта всех сервисов (обычно не больше минуты). Приложение автоматически создаст тестовую очередь SQS my-queue и тестовый бакет S3 my-bucket внутри LocalStack, если они отсутствуют.
+4. Проверьте логи приложения: `docker compose logs app -f`
 
 ### Проверка работоспособности
 Отправьте тестовое сообщение в очередь SQS через эндпоинт LocalStack:
@@ -45,12 +45,13 @@ curl -X POST "http://localhost:4566/000000000000/my-queue?Action=SendMessage" \
   -d "MessageBody={\"type\":\"site\",\"id\":18,\"action\":\"create\"}"
 ```
 3. через Postman (рекомендуемое):
-Метод: POST
-URL: `http://localhost:4566/000000000000/my-queue?Action=SendMessage`  
-Заголовок: Content-Type: application/x-www-form-urlencoded
-Тело (тип x-www-form-urlencoded):
-  Ключ: MessageBody
-  Значение: `{"type":"site","id":18,"action":"create"}`  
+- Метод: POST
+- URL: `http://localhost:4566/000000000000/my-queue?Action=SendMessage`
+- Заголовок: Content-Type: application/x-www-form-urlencoded
+- Тело (тип x-www-form-urlencoded):
+  - Ключ: MessageBody
+  -  Значение: `{"type":"site","id":18,"action":"create"}`  
+  
 <img width="1075" height="333" alt="image" src="https://github.com/user-attachments/assets/08abf192-86ee-43b5-8acc-aa59965135ab" />
 
 После успешной отправки в логах приложения (app) появится запись:
@@ -67,13 +68,9 @@ URL: `http://localhost:4566/000000000000/my-queue?Action=SendMessage`
 
 ### Проверка созданных объектов в S3
 1. Просмотрите содержимое бакета: `docker exec -it project-localstack awslocal s3 ls s3://my-bucket/`
-
-Пример вывода: `2026-05-13 08:14:41         41 site-18-create.txt`
-
+- Пример вывода: `2026-05-13 08:14:41         41 site-18-create.txt`
 2. Для просмотра содержимого конкретного файла: `docker exec -it project-localstack awslocal s3 cp s3://my-bucket/site-18-create.txt -`
-   
-Пример вывода: `{"type":"site","id":19,"action":"create"}`
-
+- Пример вывода: `{"type":"site","id":19,"action":"create"}`
 ### Поддерживаемые типы сообщений
 - `space`
 - `form`
