@@ -72,15 +72,15 @@ URL: `http://localhost:4566/000000000000/my-queue?Action=SendMessage`
 Пример вывода: `{"type":"site","id":19,"action":"create"}`
 
 ### Поддерживаемые типы сообщений
-`space`
-`form`
-`site `
-`group`
-`user`
+- `space`
+- `form`
+- `site `
+- `group`
+- `user`
 Действия (action):
-`create` – создаёт новую запись (для site также загружает файл)
-`update` – обновляет временную метку updated_at
-`delete` – помечает запись как удалённую (soft delete)
+- `create` – создаёт новую запись (для site также загружает файл)
+- `update` – обновляет временную метку updated_at
+- `delete` – помечает запись как удалённую (soft delete)
 
 
 
